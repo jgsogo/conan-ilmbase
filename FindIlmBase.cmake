@@ -1,26 +1,12 @@
-set(ILMBASE_INCLUDE_DIRS "${CONAN_INCLUDE_DIRS_ILMBASE}")
-set(ILMBASE_LIBRARY_DIRS "${CONAN_LIB_DIRS_ILMBASE}")
 
-set(ILMBASE_INCLUDE_DIR  "${ILMBASE_INCLUDE_DIRS}")
-set(ILMBASE_LIBRARY_DIR  "${ILMBASE_LIBRARY_DIRS}")
+set(ILMBASE_ROOT ${CONAN_ILMBASE_ROOT} CACHE PATH "Path to ILMBase root path")
 
-set(ILMBASE_LIBRARIES "")
-foreach (LIBNAME ${CONAN_LIBS_ILMBASE})
-    string(REGEX MATCH "[^-]+" LIBNAME_STEM ${LIBNAME})
-    find_library(ILMBASE_${LIBNAME_STEM}_LIBRARY NAMES ${LIBNAME} PATHS ${ILMBASE_LIBRARY_DIRS})
-    list(APPEND ILMBASE_LIBRARIES "${ILMBASE_${LIBNAME_STEM}_LIBRARY}")
-endforeach()
-set(ILMBASE_LIBRARY "${ILMBASE_LIBRARIES}")
+find_path(ILMBASE_INCLUDE_DIRS
+	NAMES IlmBaseConfig.h
+	HINTS ${ILMBASE_ROOT}/include ${ILMBASE_ROOT}/include/OpenEXR
+	DOC "The IlmBase include directory"
+)
 
-foreach (INCLUDE_DIR ${ILMBASE_INCLUDE_DIRS})
-    if(NOT ILMBASE_VERSION AND INCLUDE_DIR AND EXISTS "${INCLUDE_DIR}/OpenEXR/IlmBaseConfig.h")
-      file(STRINGS
-           ${INCLUDE_DIR}/OpenEXR/IlmBaseConfig.h
-           TMP
-           REGEX "#define ILMBASE_VERSION_STRING.*$")
-      string(REGEX MATCHALL "[0-9.]+" ILMBASE_VERSION ${TMP})
-    endif()
-endforeach()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(IlmBase
@@ -30,3 +16,9 @@ find_package_handle_standard_args(IlmBase
     VERSION_VAR
         ILMBASE_VERSION
 )
+
+
+find_package_handle_standard_args(IlmBase DEFAULT_MSG
+    ILMBASE_INCLUDE_DIRS
+    )
+mark_as_advanced(ILMBASE_INCLUDE_DIRS)
