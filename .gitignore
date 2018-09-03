@@ -29,3 +29,5 @@
 
 *.pyc
 build/
+.idea/
+tmp/
