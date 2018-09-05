@@ -1,4 +1,4 @@
-from conans import ConanFile, CMake, tools
+from conans import ConanFile, CMake, tools, AutoToolsBuildEnvironment
 import os
 
 
@@ -10,7 +10,7 @@ class IlmBaseConan(ConanFile):
     url = "https://github.com/Mikayex/conan-ilmbase.git"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "namespace_versioning": [True, False], "fPIC": [True, False]}
-    default_options = "shared=False", "namespace_versioning=True", "fPIC=False"
+    default_options = "shared=False", "namespace_versioning=True", "fPIC=True"
     generators = "cmake"
     exports = "FindIlmBase.cmake"
 
@@ -42,24 +42,28 @@ conan_basic_setup()""")
         return cmake
 
     def build(self):
-        cmake = self._configure_cmake()
-        cmake.build()
+        yes_no = {True: "enable", False: "disable"}
+        args = ["--{}-shared".format(yes_no.get(bool(self.options.shared))),
+                "--{}-stable".format(yes_no.get(not bool(self.options.shared))),
+                "--{}-namespaceversioning".format(yes_no.get(bool(self.options.namespace_versioning))),
+                ]
+
+        autotools = AutoToolsBuildEnvironment(self)
+        autotools.configure(configure_dir='ilmbase-{}'.format(self.version), args=args)
+        autotools.make()
 
     def package(self):
-        cmake = self._configure_cmake()
-        cmake.install()
+        autotools = AutoToolsBuildEnvironment(self)
+        autotools.install()
         self.copy("FindIlmBase.cmake", src=".", dst=".")
         self.copy("license*", dst="licenses", src="ilmbase-%s" % self.version, ignore_case=True, keep_path=False)
 
     def package_info(self):
-        parsed_version = self.version.split('.')
-        version_suffix = "-%s_%s" % (parsed_version[0], parsed_version[1]) if self.options.namespace_versioning else ""
+        self.cpp_info.includedirs = ['include']
+        self.cpp_info.libs = ['Half', 'Iex', 'IexMath', 'IlmThread', 'Imath']
 
         if self.options.shared and self.settings.os == "Windows":
             self.cpp_info.defines.append("OPENEXR_DLL")
-        self.cpp_info.includedirs = ['include', 'include/OpenEXR']
-        self.cpp_info.libs = ["Imath" + version_suffix, "IexMath" + version_suffix, "Half", "Iex" + version_suffix,
-                              "IlmThread" + version_suffix]
 
         if not self.settings.os == "Windows":
             self.cpp_info.cppflags = ["-pthread"]
