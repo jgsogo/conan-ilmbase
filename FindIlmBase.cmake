@@ -34,54 +34,11 @@ find_package_handle_standard_args(IlmBase
         ILMBASE_VERSION
 )
 
+
 # Create imported targets
 if(ILMBASE_FOUND)
-    message(STATUS ">>>>>>")
-    message(STATUS "ILMBASE_Half_LIBRARY: ${ILMBASE_Half_LIBRARY}")
-    message(STATUS "INTERFACE_INCLUDE_DIRECTORIES: ${ILMBASE_INCLUDE_DIRS}")
-
-    add_library(Half UNKNOWN IMPORTED)
-    set_target_properties(Half PROPERTIES
-        IMPORTED_LOCATION ${ILMBASE_Half_LIBRARY}
-        INTERFACE_INCLUDE_DIRECTORIES ${ILMBASE_INCLUDE_DIRS}
-        )
-
-    add_library(Iex UNKNOWN IMPORTED)
-    set_target_properties(Iex PROPERTIES
-        IMPORTED_LOCATION ${ILMBASE_Iex_LIBRARY}
-        INTERFACE_INCLUDE_DIRECTORIES ${ILMBASE_INCLUDE_DIRS}
-        )
-
-    add_library(IexMath UNKNOWN IMPORTED)
-    set_target_properties(IexMath PROPERTIES
-        IMPORTED_LOCATION ${ILMBASE_IexMath_LIBRARY}
-        INTERFACE_INCLUDE_DIRECTORIES ${ILMBASE_INCLUDE_DIRS}
-        IMPORTED_LINK_INTERFACE_LIBRARIES ${ILMBASE_Iex_LIBRARY}
-        )
-
-    add_library(IlmThread UNKNOWN IMPORTED)
-    set_target_properties(IlmThread PROPERTIES
-        IMPORTED_LOCATION ${ILMBASE_IlmThread_LIBRARY}
-        INTERFACE_INCLUDE_DIRECTORIES ${ILMBASE_INCLUDE_DIRS}
-        IMPORTED_LINK_INTERFACE_LIBRARIES ${ILMBASE_Iex_LIBRARY}
-        )
-
-    add_library(Imath UNKNOWN IMPORTED)
-    set_target_properties(Imath PROPERTIES
-        IMPORTED_LOCATION ${ILMBASE_Imath_LIBRARY}
-        INTERFACE_INCLUDE_DIRECTORIES ${ILMBASE_INCLUDE_DIRS}
-        IMPORTED_LINK_INTERFACE_LIBRARIES ${ILMBASE_Iex_LIBRARY}
-        )
-
-    add_library(IlmBase UNKNOWN IMPORTED)
-    set_target_properties(IlmBase PROPERTIES
-        INTERFACE_INCLUDE_DIRECTORIES ${ILMBASE_INCLUDE_DIRS}
-        IMPORTED_LINK_INTERFACE_LIBRARIES ${ILMBASE_IexMath_LIBRARY}
-                                          ${ILMBASE_IlmThread_LIBRARY}
-                                          ${ILMBASE_Imath_LIBRARY}
-        )
-
-    set(${ILMBASE_LIBRARIES} IlmBase)
+    # TODO: Create imported targets (CMake version?)
+    set(ILMBASE_LIBRARIES ${CONAN_LIBS_ILMBASE})
 endif()
 
 

@@ -59,7 +59,7 @@ conan_basic_setup()""")
         self.copy("license*", dst="licenses", src="ilmbase-%s" % self.version, ignore_case=True, keep_path=False)
 
     def package_info(self):
-        self.cpp_info.includedirs = ['include']
+        self.cpp_info.includedirs = [os.path.join('include', 'OpenEXR'), ]
         self.cpp_info.libs = ['Half', 'Iex', 'IexMath', 'IlmThread', 'Imath']
 
         if self.options.shared and self.settings.os == "Windows":
