@@ -20,6 +20,6 @@ if [[ "$(uname -s)" == 'Darwin' ]]; then
 fi
 
 pip install conan --upgrade
-pip install conan_package_tools
+pip install conan_sword_and_sorcery
 
 conan user
