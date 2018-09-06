@@ -51,6 +51,7 @@ conan_basic_setup()""")
         autotools = AutoToolsBuildEnvironment(self)
         autotools.configure(configure_dir='ilmbase-{}'.format(self.version), args=args)
         autotools.make()
+        tools.replace_prefix_in_pc_file("IlmBase.pc", "${package_root_path_ilmbase}")
 
     def package(self):
         autotools = AutoToolsBuildEnvironment(self)

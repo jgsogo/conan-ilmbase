@@ -12,6 +12,3 @@ message(STATUS "IlmBase include dirs: ${ILMBASE_INCLUDE_DIRS}")
 add_executable(testPackage main.cpp testMatrix.cpp)
 target_link_libraries(testPackage ${ILMBASE_LIBRARIES})
 
-get_target_property(OUT testPackage LINK_LIBRARIES)
-message(STATUS ${OUT})
-
