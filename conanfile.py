@@ -3,7 +3,7 @@ import os
 
 
 class IlmBaseConan(ConanFile):
-    name = "IlmBase"
+    name = "ilmbase"
     description = "IlmBase is a component of OpenEXR. OpenEXR is a high dynamic-range (HDR) image file format developed by Industrial Light & Magic for use in computer imaging applications."
     version = "2.3.0"
     license = "BSD"
@@ -25,21 +25,6 @@ class IlmBaseConan(ConanFile):
     def source(self):
         url = "https://github.com/openexr/openexr/releases/download/v{version}/ilmbase-{version}.tar.gz"
         tools.get(url.format(version=self.version))
-        tools.replace_in_file("ilmbase-%s/CMakeLists.txt" % self.version, "PROJECT ( ilmbase )",
-                              """PROJECT ( ilmbase )
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()""")
-
-    def _configure_cmake(self):
-        cmake = CMake(self)
-        cmake.definitions["ENABLE_TESTS"] = False
-        cmake.definitions["NAMESPACE_VERSIONING"] = self.options.namespace_versioning
-        if "fPIC" in self.options.fields:
-            cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = self.options.fPIC
-
-        src_dir = "ilmbase-%s" % self.version
-        cmake.configure(source_dir=src_dir)
-        return cmake
 
     def build(self):
         yes_no = {True: "enable", False: "disable"}

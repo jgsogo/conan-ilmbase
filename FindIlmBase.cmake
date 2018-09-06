@@ -49,6 +49,6 @@ mark_as_advanced(MYPACKAGE_LIBRARY
     ILMBASE_IlmThread_LIBRARY
     ILMBASE_Imath_LIBRARY)
 
-if(MYPACKAGE_FOUND)
+if(ILMBASE_FOUND)
 	mark_as_advanced(ILMBASE_ROOT)
 endif()
