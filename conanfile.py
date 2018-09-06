@@ -44,7 +44,7 @@ conan_basic_setup()""")
     def build(self):
         yes_no = {True: "enable", False: "disable"}
         args = ["--{}-shared".format(yes_no.get(bool(self.options.shared))),
-                "--{}-stable".format(yes_no.get(not bool(self.options.shared))),
+                "--{}-static".format(yes_no.get(not bool(self.options.shared))),
                 "--{}-namespaceversioning".format(yes_no.get(bool(self.options.namespace_versioning))),
                 ]
 
