@@ -29,12 +29,14 @@ class IlmBaseConan(ConanFile):
         if self.settings.compiler == 'gcc' and Version(str(self.settings.compiler.version)) < "5":
             raise ConanException("gcc >= 5 is required (support for C++14)")
 
-        if self.settings.compiler == 'apple-clang' and self.settings.compiler.libcxx != 'libc++':
-            raise ConanException("apple-clang requires settting compiler.libcxx=libc++")
-
     def source(self):
         url = "https://github.com/openexr/openexr/releases/download/v{version}/ilmbase-{version}.tar.gz"
         tools.get(url.format(version=self.version))
+        tools.replace_in_file(os.path.join('ilmbase-{}'.format(self.version), 'CMakeLists.txt'), 'PROJECT ( ilmbase )',
+            """PROJECT ( ilmbase )
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+""")
 
     def build(self):
         yes_no = {True: "enable", False: "disable"}
