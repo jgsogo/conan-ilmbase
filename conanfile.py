@@ -1,5 +1,5 @@
 
-import os
+import os, glob
 
 from conans import ConanFile, tools, AutoToolsBuildEnvironment
 from conans.errors import ConanException
@@ -55,6 +55,9 @@ conan_basic_setup()
         autotools.install()
         self.copy("FindIlmBase.cmake", src=".", dst=".")
         self.copy("license*", dst="licenses", src="ilmbase-%s" % self.version, ignore_case=True, keep_path=False)
+
+        for f in glob.glob(os.path.join(self.package_folder, 'lib', '*.la')):
+            os.remove(f)
 
     def package_info(self):
         self.cpp_info.includedirs = [os.path.join('include', 'OpenEXR'), ]
