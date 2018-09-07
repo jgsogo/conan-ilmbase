@@ -49,6 +49,5 @@ install:
   - ./.travis/install.sh
 
 script:
-  - ls -la /usr/lib/libstd*
   - chmod +x .travis/run.sh
   - ./.travis/run.sh
