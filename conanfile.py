@@ -26,12 +26,6 @@ class IlmBaseConan(ConanFile):
         if "fPIC" in self.options.fields and self.options.shared:
             self.options.fPIC = True
 
-        if self.settings.compiler == 'gcc' and Version(str(self.settings.compiler.version)) < "5":
-            raise ConanException("gcc >= 5 is required (support for C++14)")
-
-        if self.settings.compiler == 'apple-clang' and self.settings.compiler.libcxx == 'libstdc++':
-            raise ConanException("Compile with stdlib=libc++ using settings.compiler.libcxx")
-
     def source(self):
         url = "https://github.com/openexr/openexr/releases/download/v{version}/ilmbase-{version}.tar.gz"
         tools.get(url.format(version=self.version))
