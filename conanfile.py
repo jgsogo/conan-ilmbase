@@ -9,7 +9,7 @@ from conans.model.version import Version
 class IlmBaseConan(ConanFile):
     name = "ilmbase"
     description = "IlmBase is a component of OpenEXR. OpenEXR is a high dynamic-range (HDR) image file format developed by Industrial Light & Magic for use in computer imaging applications."
-    version = "2.3.0"
+    version = "1.0.3"
     license = "BSD"
     url = "https://github.com/Mikayex/conan-ilmbase.git"
     settings = "os", "compiler", "build_type", "arch"
@@ -26,20 +26,9 @@ class IlmBaseConan(ConanFile):
         if "fPIC" in self.options.fields and self.options.shared:
             self.options.fPIC = True
 
-        if self.settings.compiler == 'gcc' and Version(str(self.settings.compiler.version)) < "5":
-            raise ConanException("gcc >= 5 is required (support for C++14)")
-
-        if self.settings.compiler == 'apple-clang' and self.settings.compiler.libcxx == 'libstdc++':
-            raise ConanException("Compile with stdlib=libc++ using settings.compiler.libcxx")
-
     def source(self):
-        url = "https://github.com/openexr/openexr/releases/download/v{version}/ilmbase-{version}.tar.gz"
-        tools.get(url.format(version=self.version))
-        tools.replace_in_file(os.path.join('ilmbase-{}'.format(self.version), 'CMakeLists.txt'), 'PROJECT ( ilmbase )',
-            """PROJECT ( ilmbase )
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
-""")
+        url = r"https://github.com/downloads/openexr/openexr/ilmbase-{}.tar.gz".format(self.version)
+        tools.get(url)
 
     def build(self):
         yes_no = {True: "enable", False: "disable"}
@@ -48,6 +37,8 @@ conan_basic_setup()
                 "--{}-namespaceversioning".format(yes_no.get(bool(self.options.namespace_versioning))),
                 ]
 
+        with tools.chdir("ilmbase-{}".format(self.version)):
+            self.run("./bootstrap")
         autotools = AutoToolsBuildEnvironment(self)
         autotools.configure(configure_dir='ilmbase-{}'.format(self.version), args=args)
         autotools.make()
